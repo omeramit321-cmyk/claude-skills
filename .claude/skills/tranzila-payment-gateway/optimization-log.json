@@ -1,0 +1,63 @@
+{
+  "cycles": [
+    {
+      "version": "1.4.0",
+      "date": "2026-08-27",
+      "lessons": [
+        "CRITICAL fixed (script rot): the 1.3.0 cycle rewrote the error-code table in SKILL.md and references/error-codes.md but never touched scripts/validate_tranzila_response.py, which still mapped 033 AND 036 both to 'Card expired' and carried 039, 091, 107, 111, 125 and 200. None of 033/036/039/091/125/200 exists in the vendor table; expired card is 015 and the installment-sum error is 406. Prose being right is not evidence the script is right, and the changelog claiming a fix is not evidence either.",
+        "CRITICAL fixed: cred_type was listed as 1/2/3/5/8/9 and currency as 1/2/3(GBP)/7(EUR). The vendor's iframe table publishes cred_type 1/6/8 and currency 1/2/978/826. Sending an undocumented value returns 016 or 017, so this was a live transaction failure, not a documentation nit.",
+        "CRITICAL fixed: the iframe callbacks were documented as notify_url. The iframe uses success_url_address / fail_url_address / notify_url_address; the bare notify_url is the Hosted Fields, 3DS and Bit name. With the wrong name no webhook ever arrives, so the customer is charged and the order is never fulfilled.",
+        "CRITICAL fixed: refunds were 'tranmode=C{index} with the ConfirmationCode' and nothing else. The legacy route is tranzila71u.cgi and additionally needs CreditPass (a separate credit password enabled on the terminal) and authnr; the API V2 route is txn_type credit/cancel/reversal with reference_txn_id. Both are now in both language files and in Example 4.",
+        "CRITICAL fixed: a J5 authorisation has to be captured with txn_type=force (or released with reversal), and Example 2 built a subscription on an uncaptured J5. Added, together with DCdisable, Tranzila's own duplicate-charge guard (field 20 in my.tranzila, 24h window at parent-terminal level, 254 chars, and no check at all on a transaction that failed the first time).",
+        "Fixed: the Gotcha said the legacy CGI response is newline-separated. It is an '&'-joined query string. The bundled script had always parsed it correctly, so the prose would have made a developer write a splitter that breaks on the real body.",
+        "SELF-INFLICTED ERROR, caught by the Expert: I removed 3DS codes 901-930 as fabricated after they did not appear in the tag-stripped text of the response-codes page. They are real. The page ships its 3DS tab as escaped markdown inside the served HTML, invisible to tag-stripping but present in the raw body. Lesson: 'absent from the extracted text' is not 'absent from the page' on a JS docs portal, and an over-correction that deletes real codes is as harmful as the fabrication it was fixing. Grep the RAW response before declaring something absent.",
+        "REJECTED an Expert MAJOR after reading the source: the reviewer said DCdisable requires u71=1 on Direct/IFRAME. u71=1 is the parameter for showing product details on the invoice, in a different section of the iframe page. Not encoded.",
+        "Fixed: TranzilaTK was described as a 19-character token whose last four digits match the card. The vendor publishes no length or format, and API V2 tokens are longer alphanumerics. The script no longer rejects a token by length.",
+        "Fixed: 'no Omnipay gateway exists' was wrong. omnipay/tranzila 404s, but futureecom/omnipay-tranzila is live on Packagist. active_merchant_tranzila is real but its only release is 0.0.1 from 2010. Probing one vendor-namespace slug is not a survey.",
+        "Added: PCI DSS 3.3.1 prohibition on storing CVV or full PAN after authorization (it was missing entirely from a payments skill), the SAQ mapping attributed to PCI SSC rather than to Tranzila, and a Privacy Protection Law note on the myid teudat zehut field.",
+        "Deferred: Steps 8, 9 and 10 (Payment Requests, Standing Orders, Invoicing) are still placeholder prose pointing at the docs index, while the vendor publishes concrete endpoints (GET /v1/pr/create, /v2/sto/create, the invoices API tree). Hosted Fields is likewise unfollowable without the script URL and init API. These are the next content increment.",
+        "Deferred: references/domain-checklist.md certifies only the surface that was corrected, which is why the iframe callback names, the API V2 field names, capture and DCdisable were invisible to every prior review. Rewrite the checklist around the vendor's own doc tree next cycle."
+      ]
+    },
+    {
+      "version": "1.3.1",
+      "date": "2026-07-16",
+      "lessons": [
+        "STALE fixed: the ITA allocation-number framing lagged. As of mid-July 2026 the threshold in force is NIS 5,000 pre-VAT (the 1 June 2026 step-down is live, cross-confirmed in the sibling israeli-vat-reporting update against two web sources). Updated the schedule line and the Reference Links row so 5,000 reads as current, not '10K now, drops to 5K'.",
+        "Fixed: softened the absolute claim that 'API V2 is the auth name, not a /v2 path'. The core payment/Bit/transaction endpoints are still /v1, but a newer endpoint (standing-order create, /v2/sto/create in tranzilajs) does use a /v2 path, so the blanket statement was no longer universally true.",
+        "Fixed: the Bit doc deep-link (docs.tranzila.com/.../dcljft4y7sgj2-bit) is now an empty un-indexed stub; repointed to the Payments & Billing section via the docs index, with a note that deep Bit slug URLs change.",
+        "Confirmed-correct-do-not-relitigate (verified 2026-07-16 against tranzilajs + active_merchant_tranzila + docs.tranzila.com): the 4-header HMAC-SHA256 auth (request-time in SECONDS), the api.tranzila.com/v1 base + legacy secure5 CGI (tranzila31.cgi/36a.cgi) + direct.tranzila.com iframenew.php, the error codes 000/004/036/037/900 with HTTP-200-on-failure, the dedicated Bit Init/Refund API, cred_type 1/2/3/5/8/9, currency 1/2/3/7 (legacy CGI), tranmode K/VK/AK/C{index}, support 073-222-4444. The 3DS success fields eci/xid/cavv are now POSITIVELY VERIFIED (previously plausible-unverified).",
+        "Deferred (additive, next cycle, not errors): (a) 3ds-flow.md, API V2 nests eci/xid/cavv under a t3ds_data object and reports the result via statusCode (e.g. 'YA') + error_code 900, rather than the flat three_ds_status Y/A/N/U/R table currently shown (which is the legacy/generic-3DS shape); (b) add cred_type 4 (Club Credit) and 6 (Visa credit / the value modern tranzilajs uses for CREDIT); (c) note API V2 uses ISO 4217 numeric currency codes (EUR=978, GBP=826) vs the legacy CGI 3/7; (d) modern refund CGI is tranzila71u.cgi, the 31tk/31pan family is legacy; (e) clarify 036/037 are legacy Tranzila Response codes, distinct from the SHVA hundreds table (expired=015, installment=406 there)."
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-05-31",
+      "lessons": [
+        "CRITICAL fixed: API V2 auth was wrong. It is a 4-header HMAC-SHA256 handshake (X-tranzila-api-app-key + X-tranzila-api-request-time + X-tranzila-api-nonce + X-tranzila-api-access-token = hmac_sha256 of the app key keyed with secret+request_time+nonce), not a single key header. Documented all four headers in SKILL.md, SKILL_HE.md, and api-parameters.md.",
+        "CRITICAL fixed: API base URL was wrong (api.tranzila.com/v2/transaction). Correct base is api.tranzila.com/v1; 'API V2' is the auth-generation name, not a /v2 path.",
+        "CRITICAL fixed: the error-code table was largely fabricated (036/107/111/125/200 mismapped; 200 is the HTTP status not an error code; 700s are PinPad not Masav; 951-954 are PayPal). Rewrote Step 11 + references/error-codes.md to only the verified codes (000 approved, 004 refusal, 036 expired, 037 installment error, 900 3DS-failed) and explained the two code spaces (SHVA hundreds + 3DS 900-930) and the HTTP-200-on-failure caveat, with a strong 'verify against the official docs' instruction. 900=3DS-failed was actually correct and kept.",
+        "MAJOR fixed: Bit was mis-described as a bit=1 flag / bit_url on the CGI (fabricated). Bit is a dedicated API (Bit Init/Refund under api.tranzila.com/v1, HMAC auth) with constraints (NIS only, sum > 5 NIS, Visa/Isracard identifier, Max-only merchants not offered, no Hosted Fields/3DS).",
+        "MINOR fixed: 'Leumi Card/Max' -> 'Max (formerly Leumi Card)'; '170+ codes' -> '260+ SHVA + separate 3DS set'. Stripped a pre-existing em-dash from the allocation block.",
+        "Verified accurate (no change): iframe + legacy CGI endpoints (direct.tranzila.com/.../iframenew.php, secure5.tranzila.com tranzila31/36a/31tk.cgi); cred_type 1/2/3/5/8/9; currency 1/2/3/7; tranmode K/VK/AK/C{index}; TranzilaTK; allocation-number schedule (20K/10K/5K); support 073-222-4444; test cards; tranzilajs lib.",
+        "Could not fully verify (flagged as plausible-unverified): 3DS success-field names (eci/xid/cavv) in 3ds-flow.md, and the ITA-approved-digital-signature wording for Tranzila's Invoicing API (skill already hedges 'confirm with Tranzila support').",
+        "Round-2 correction: a verification subagent (cross-checking the active_merchant_tranzila gem, which the skill cites) caught that the first research agent's error-code corrections were themselves wrong, expired is 036 (not 015; 015 is a strip-mismatch), and installment-sum mismatch is 037 (not 406; 406 is not a SHVA code, and 111 is 'cancel not allowed', not 'installments not authorized'). Re-corrected the table to 000/004/036/037/900 and dropped the contested codes. Also fixed X-tranzila-api-request-time units: SECONDS (per tranzilajs), not milliseconds (would break the HMAC). Lesson: do not trust a single agent's specific API-code claims; cross-check against a real client implementation."
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-10-18",
+      "lessons": [
+        "STALE fixed: docs.tranzila.com was restructured. The iframe host is directng.tranzila.com; direct.tranzila.com is 'Legacy Deprecated' and the old iframe page says official support ends 1 January 2027. Next cycle after that date: drop the legacy host entirely.",
+        "BUG fixed: Hosted Fields was described as tokenise-in-browser then charge from the server. fields.charge() performs the charge with a server-issued Handshake V2 thtk (mandatory for Hosted Fields); token only with tokenize:true; notify_url must be set.",
+        "BUG fixed: Handshake V2 was presented as a callback-signature mechanism. It is an amount lock (912791 on mismatch, thtk 20 minutes, Token Module, /v1/handshake/create deprecated). response_hash is documented for Hosted Fields only.",
+        "BUG fixed (expert round 1): API V2 amounts are an items array (no sum); credit/cancel/reversal require authorization_number (22101); allocation-number business ID goes in user_defined_fields on API V2 and as card_holder_id_number + business_id on Hosted Fields; iframe Notify must be confirmed server-side via the Transactions / Reports API. Detail lives in references/api-v2-flows.md.",
+        "Script fixed: validate_tranzila_response.py failed the vendor's own DirectNG and Hosted Fields success samples (required ConfirmationCode; ignored transaction_response). Now accepts transaction_id/index, both result keys, and surfaces top-level API error_code.",
+        "Word cap: SKILL.md sits at ~4,970 words after moving the statute text (references/allocation-number.md), the code-table audit trail (references/error-codes.md) and API V2 contracts (references/api-v2-flows.md). Any next addition must move something else out first.",
+        "Deferred: metadata.json display_description.he is one line vs a four-sentence EN (Hebrew depth gap); not changed this cycle to avoid a description edit and the holdout gate. Fix next cycle with the Phase 5.7 eval.",
+        "Deferred (expert minor): My Billing sends an automatic token-correction email to end customers by default, and the STO notification endpoint is configured in my.tranzila, not per request; Handshake V2 request_params (order ID echoed back) and hidesum/opensum iframe options are not described.",
+        "Unverified, left hedged: the exact response_hash concatenation (vendor describes it only in prose); which iframe notify field, if any, carries the approval number and expiry (DirectNG sample lists neither)."
+      ]
+    }
+  ]
+}
