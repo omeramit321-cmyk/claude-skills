@@ -6,8 +6,8 @@ Claude Code skills, stored in `.claude/skills/` so every session opened on this 
 |---|---|
 | shadcn | shadcn/ui |
 | emil-design-eng | emilkowalski/skills |
-| grill-me, to-spec, handoff, tdd, improve-codebase-architecture, code-review | mattpocock/skills |
-| brainstorming, writing-plans, systematic-debugging | obra/superpowers |
+| grill-me, to-spec, handoff, tdd, improve-codebase-architecture, code-review, grilling, codebase-design, domain-modeling, setup-matt-pocock-skills | mattpocock/skills |
+| brainstorming, writing-plans, systematic-debugging, executing-plans, subagent-driven-development, verification-before-completion, using-git-worktrees, test-driven-development, requesting-code-review, finishing-a-development-branch | obra/superpowers |
 | vercel-react-best-practices, web-design-guidelines | vercel-labs/agent-skills |
 | hyperframes | heygen-com/hyperframes |
 | ui-ux-pro-max, banner-design, brand, design, design-system, slides, ui-styling | nextlevelbuilder/ui-ux-pro-max-skill (MIT) |
