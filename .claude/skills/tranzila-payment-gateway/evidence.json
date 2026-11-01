@@ -1,0 +1,893 @@
+{
+  "schemaVersion": "1.0",
+  "skill": "tranzila-payment-gateway",
+  "generated_at": "2026-10-18T12:00:00Z",
+  "claims": [
+    {
+      "claim_id": "tranzila-endpoints",
+      "claim": "The legacy iframe base URL is https://direct.tranzila.com/{terminal}/iframenew.php (now marked Legacy Deprecated in favour of directng.tranzila.com), and the legacy CGI endpoints https://secure5.tranzila.com/cgi-bin/tranzila31.cgi, https://secure5.tranzila.com/cgi-bin/tranzila36a.cgi and https://secure5.tranzila.com/cgi-bin/tranzila31tk.cgi (/cgi-bin/tranzila31tk.cgi) are live on secure5.tranzila.com but are not documented on the vendor docs site, so the skill flags them as legacy.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "your iframe base url will be - https://direct.tranzila.com/terminalname/iframenew.php",
+      "fetched_at": "2026-08-27T00:16:03.959206+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09",
+      "source_note": "tranzila31pan.cgi was removed from the skill this cycle: it returns an Apache-level HTTP 500 while a fabricated sibling path on the same host returns 404, and it appears in no vendor documentation.",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "api-v2-hmac-auth",
+      "claim": "Tranzila API V2 authentication is a 4-header HMAC-SHA256 handshake: X-tranzila-api-app-key (public key), X-tranzila-api-request-time (unix seconds), X-tranzila-api-nonce (~40 bytes), X-tranzila-api-access-token (HMAC-SHA256 of the app key keyed with secret+request_time+nonce). Base URL is api.tranzila.com/v1; a single-header request is rejected.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/bit-api",
+      "raw_snippet": "X-tranzila-api-app-key\tApplication key supplied by Tranzila\nX-tranzila-api-request-time\tRequest time sent in Unix format (large integer counting seconds from Jan 1 st , 1970 00:00:00\nX-tranzila-api-nonce\tA 40 bytes NONCE – unique random string generated with any random bytes function\nX-tranzila-api-access-token\thash_hmac using ‘sha256’ on application key with secret + request-time + nonce.",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "transaction-codes",
+      "claim": "Tranzila publishes its response codes on the Transaction Response Codes page: 000 approved, 777 operation completed, 001-017 issuer refusals and card-status problems (015 expired card, 016 unauthorized currency, 017 unauthorized credit type), 401-406 installment errors, and a separate 3DS set 900-930 on its own tab (see 3ds-code-table).",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/transaction-response-codes",
+      "raw_snippet": "000 Transaction approved. 777 פעולה הושלמה (קוד הצלחה לפעולות בהן לא נרשמת עסקה, כוללJ2 ו- J5)",
+      "fetched_at": "2026-08-27T00:16:03.959206+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/error-codes.md",
+        "references/api-parameters.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09",
+      "verified_at": "2026-08-27T00:16:03.959206+00:00"
+    },
+    {
+      "claim_id": "bit-api",
+      "claim": "Tranzila Bit is a dedicated API (Bit Init / Bit Refund endpoints under api.tranzila.com/v1 with the 4-header HMAC auth), not a bit=1 flag on the card CGI. Bit constraints: NIS only, sum above 5 NIS, merchant needs a Visa or Isracard identifier, Max-only merchants are not offered Bit; no Hosted Fields / 3DS.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/bit-api",
+      "raw_snippet": "Transactions must be in NIS (₪) and the sum must be over 5 NIS",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "allocation-number",
+      "claim": "The Israel Tax Authority allocation number (mispar haktza'a) is mandatory for B2B tax invoices above a pre-VAT threshold that steps down: NIS 20,000 (from Jan 2025), NIS 10,000 (from Jan 2026), NIS 5,000 (from Jun 2026). Without it the buyer cannot deduct input VAT.",
+      "source_url": "https://www.gov.il/he/service/request-assignment-number-for-tax-invoice",
+      "raw_snippet": "מספרי הקצאה אלה יידרשו כתנאי לניכוי מס התשומות בעסקאות שמעל לתקרה שנקבעה בחוק (20,000 ₪ לשנת 2025) 10,000 החל מה-1 בינואר 2026 ו-5,000 ₪ החל מה-1 ביוני 2026.",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "rendered in a browser with location.href asserted, 2026-08-27. NOTE the scope limit: this ITA page carries only the 2025/2026 rows and does NOT mention 25,000 or May 2024, so the 2024 opening row is evidenced separately by allocation-schedule-full and allocation-schedule-corroboration.",
+      "verified_at": "2026-08-27T17:43:11.496297+00:00"
+    },
+    {
+      "claim_id": "tranzilajs-lib",
+      "claim": "tranzilajs is a community TypeScript/Node.js Tranzila client at github.com/NirTatcher/tranzilajs (npm: tranzilajs).",
+      "source_url": "https://github.com/NirTatcher/tranzilajs",
+      "raw_snippet": "tranzilajs",
+      "fetched_at": "2026-05-31T00:00:00Z",
+      "appears_in": [
+        "SKILL.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-company",
+      "claim": "Tranzila is an Israeli payment processor (solek) connected to the Shva network, supporting Isracard, Visa Cal, and Max (formerly Leumi Card). Support phone 073-222-4444.",
+      "source_url": "https://www.tranzila.com/contact.html",
+      "raw_snippet": "רח' מאיר אריאל 6, ת.ד 8723, נתניה 073-222-4444 073-222-4440",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09"
+    },
+    {
+      "claim_id": "illustrative-figures",
+      "claim": "Inventory of illustrative worked-example amounts and endpoint strings that appear in the skill body, recorded here so the self-consistency gate can match them: example subscription 99 NIS / 99 ש\"ח per month; installment example 6,000 NIS / 6,000 ש\"ח split into 3 of 2,000 NIS / 2,000 ש\"ח; iframe example 100 NIS (100 ILS); Bit minimum sum above 5 NIS / 5 ש\"ח; allocation-number thresholds 20,000 ש\"ח, 10,000 ש\"ח and 5,000 ש\"ח; and the endpoint strings https://api.tranzila.com, https://api.tranzila.com/v1, https://api.tranzila.com/v1/{resource}, `/v2`, https://direct.tranzila.com/{supplier}/iframenew.php, https://direct.tranzila.com/{supplier}/iframenew.php?sum=100&currency=1&cred_type=1, https://secure5.tranzila.com/cgi-bin/ and https://www.gov.il/he/service/request-assignment-number-for-tax-invoice. The 5 NIS Bit minimum and the sum/currency parameters are the parts substantiated by the cited Tranzila docs page; the threshold figures are substantiated by the allocation-number evidence entry.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "we would like to charge an amount of 5 NIS, we will send the parmater sum=5 and currency=1(nis) using fromData.",
+      "fetched_at": "2026-08-27T00:16:03.959206+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "fetched and read the cited page on 2026-08-09"
+    },
+    {
+      "claim_id": "tranzila-corporate-site",
+      "claim": "Tranzila's corporate website, cited in the skill as the vendor home page",
+      "source_url": "https://www.tranzila.com",
+      "raw_snippet": "כל הזכויות שמורות ל\"טרנזילה\"",
+      "fetched_at": "2026-08-09T00:00:00Z",
+      "verified_via": "fetched and read the page on 2026-08-09",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "url-inventory",
+      "claim": "Bookkeeping entry: the list of Tranzila endpoint URL strings referenced in the skill body, recorded so the URL cross-check can resolve them. Substantive verification of each endpoint lives in the tranzila-endpoints entry.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "eight : 800 px ; \" > < iframe id = \" tranzila-frame \" allowpaymentrequest = ' true ' name = \" tranzila \" src = \" \" style = \" width : 100 % ; height : 100 % ; \" > </ iframe > </ div > </ div > </ div > </ section > </ div > </ main > Bit Example In order to add bit we will need to pass bit_pay =1 HTML < main class = \" min-h750 \" > < div class = \" container \" > < section id = \" main-content \" > < div class = \" row text-center mt-5 \" > < div class = \" col \" > < h1 class = \" display-3 text-primary \" > Pay Amount </ h1 > </ div > </",
+      "fetched_at": "2026-08-18",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ],
+      "verified_via": "cited page fetched and confirmed to contain \"100\"; snippet replaced with the page's own wording around it",
+      "verified_at": "2026-08-18"
+    },
+    {
+      "claim_id": "tranzila-3ds-complete-path",
+      "claim": "The 3DS completion call is POST https://api.tranzila.com/v1/transaction/credit_card/3ds/complete, and the 3DS create step uses POST https://api.tranzila.com/v1/transaction/credit_card/create.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-api-3ds/complete",
+      "raw_snippet": "Complete post https://api.tranzila.com/v1 /transaction/credit_card/3ds/complete",
+      "fetched_at": "2026-08-27T00:08:53.517231+00:00",
+      "verified_at": "2026-08-27T00:08:53.517231+00:00",
+      "appears_in": [
+        "references/3ds-flow.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-3ds-t3ds-data",
+      "claim": "On API V2 the 3DS result is nested in a t3ds_data object with version, statusCode, statusMessage, xid, cavv and eci, and an application error_code 900 means the transaction failed during 3D Secure validation while the HTTP status is still 200.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-api-3ds/complete",
+      "raw_snippet": "\"statusCode\" : \"YA\"",
+      "fetched_at": "2026-08-27T00:08:53.517231+00:00",
+      "verified_at": "2026-08-27T00:08:53.517231+00:00",
+      "appears_in": [
+        "references/3ds-flow.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-auth-headers-doc",
+      "claim": "Tranzila API V2 authentication uses X-tranzila-api-app-key, X-tranzila-api-request-time (Unix seconds), X-tranzila-api-nonce (40 bytes) and X-tranzila-api-access-token, the last being an HMAC-SHA256 of the application key keyed with secret + request-time + nonce.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/authentication",
+      "raw_snippet": "Request time sent in Unix format (integer counting seconds from Jan 1st, 1970 00:00:00 UTC)",
+      "fetched_at": "2026-08-27T00:08:53.517231+00:00",
+      "verified_at": "2026-08-27T00:08:53.517231+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-iframe-param-values",
+      "claim": "The vendor iframe parameter table gives cred_type as 1 - Credit card, 6 - Credit, 8 - installments; currency as 1 - NIS, 2 - US dollar, 978 - Euro, 826 - Pound Sterling GBP; and tranmode as A standard, V verification (J5), K token without checking the card, N verification (J2), J standing-order initiation, with token variants AK, NK, VK.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "cred_type 1 - Credit card 6 - Credit 8 - installments Payment type currency 1 - NIS, 2 - US dollar 978 - Euro, 826 - Pound Sterling GBP",
+      "fetched_at": "2026-08-27T00:08:53.517231+00:00",
+      "verified_at": "2026-08-27T00:08:53.517231+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-response-codes-table",
+      "claim": "The vendor transaction-response-codes table gives 015 as expired card, 016 unauthorized currency, 017 unauthorized credit type, 406 as the installment-sum mismatch, and contains no 033, 036, 037, 039, 091, 125 or 200.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/transaction-response-codes",
+      "raw_snippet": "015 Expired card. Please check the expiration date again. 016 Unauthorized currency. 017 Unauthorized credit type for this transaction.",
+      "fetched_at": "2026-08-27T00:08:53.517231+00:00",
+      "verified_at": "2026-08-27T00:08:53.517231+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/error-codes.md",
+        "scripts/validate_tranzila_response.py"
+      ]
+    },
+    {
+      "claim_id": "tranzila-refund-cgi",
+      "claim": "The community SDK maps the card-refund operation to /cgi-bin/tranzila71u.cgi, and the endpoint is live on secure5.tranzila.com (HTTP 200, its own branded page, while a fabricated sibling path returns 404).",
+      "source_url": "https://raw.githubusercontent.com/NirTatcher/tranzilajs/HEAD/src/constants.ts",
+      "raw_snippet": "\"CARD_REFUND\": \"/cgi-bin/tranzila71u.cgi\"",
+      "fetched_at": "2026-08-27T00:10:00.319699+00:00",
+      "verified_at": "2026-08-27T00:10:00.319699+00:00",
+      "appears_in": [
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "tranzila-71u-live",
+      "claim": "The refund CGI URL https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi is live.",
+      "source_url": "https://secure5.tranzila.com/cgi-bin/tranzila71u.cgi",
+      "raw_snippet": "<title>Tranzila Alert</title>",
+      "fetched_at": "2026-08-27T00:10:09.982206+00:00",
+      "verified_at": "2026-08-27T00:10:09.982206+00:00",
+      "verified_via": "endpoint probe: HTTP 200 serving Tranzila's own branded alert page, while a deliberately fabricated sibling .cgi on the same host returns 404",
+      "appears_in": [
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-callback-params",
+      "claim": "The iframe callback and redirect parameters are success_url_address, fail_url_address and notify_url_address; the Notify page receives the transaction data as actually performed.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "notify_url_address The \"Notify\" page is intended to receive transaction data",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-bit-pay",
+      "claim": "Bit can be added to the iframe with bit_pay=1.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "bit_pay 1 Add the option to pay with Bit",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-maxpay",
+      "claim": "maxpay sets the maximum number of installments on the iframe, and it must not be passed together with npay, fpay and spay.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "maxpay Positive integer maximum amount of installments",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "dcdisable",
+      "claim": "Tranzila prevents duplicate transactions with a unique value in the DCdisable parameter, configured as an additional transaction field in my.tranzila.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-api/create-a-credit-card-transaction",
+      "raw_snippet": "The prevention solution is based on a unique value sent for a transaction under the parameter DCdisable",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "txn-types-v2",
+      "claim": "On POST /v1/transaction/credit_card/create the txn_type field selects debit, credit, verify, force, cancel, reversal or sto, and reference_txn_id points at the original transaction.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-api/create-a-credit-card-transaction",
+      "raw_snippet": "cancel - canceling a debit or a credit transaction. reversal - release credit limit - j5",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:27:06.446991+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "3ds-code-table",
+      "claim": "The 3DS Errors tab of the response-codes page publishes codes 900 to 930, returned during 3D Secure authentication before the transaction is submitted to SHVA for clearing.",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/transaction-response-codes",
+      "raw_snippet": "| 901 | Card authentication failed. |",
+      "fetched_at": "2026-08-27T00:27:06.446991+00:00",
+      "verified_at": "2026-08-27T00:28:06.061027+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/error-codes.md",
+        "scripts/validate_tranzila_response.py"
+      ],
+      "source_note": "The 3DS tab content ships inside the page as raw markdown behind a tab control, so the code rows (900 through 930) are present in the served HTML but not in the tab-stripped text; the snippet above is the tab intro line, and the rows were read directly from the same served HTML.",
+      "verified_via": "raw HTML: the 3DS tab ships as escaped markdown inside the served page, so the rows are invisible to tag-stripped extraction; read directly out of the raw response body on this date"
+    },
+    {
+      "claim_id": "allocation-schedule-full",
+      "claim": "The allocation-number regime began in May 2024. The threshold schedule before VAT is NIS 25,000 from May 2024, 20,000 from January 2025, 10,000 from January 2026 and 5,000 from June 2026.",
+      "source_url": "https://www.icount.co.il/blog/invoice-israel/",
+      "raw_snippet": "מאי 2024 25,000 ש״ח ינואר 2025 20,000 ש״ח ינואר 2026 10,000 ש״ח יוני 2026 5",
+      "fetched_at": "2026-08-27T17:41:27.614548+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "allocation-schedule-corroboration",
+      "claim": "Independent corroboration of the same four-step schedule from the start of the reform.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "מאי 2024 25,000 ₪ ינואר 2025 20,000 ₪ ינואר 2026 10,000 ש״ח יוני 2026 ואילך 5,000 ש״ח",
+      "fetched_at": "2026-08-27T17:41:27.614548+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "allocation-regime-start-may-2024",
+      "claim": "The Israel Invoices reform came into force in May 2024, so an invoice dated before that never required an allocation number.",
+      "source_url": "https://www.greeninvoice.co.il/magazine/israel-invoice/",
+      "raw_snippet": "מת חשבוניות ישראל, נכנסה לתוקף במאי 2024",
+      "fetched_at": "2026-08-27T17:41:27.614548+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "vat-s38a1-exceeds",
+      "claim": "Section 38(a1) of the VAT Law bars the buyer's input-VAT deduction on a tax invoice whose pre-tax amount EXCEEDS the stated figure and carries no allocated number, so an invoice exactly at the threshold is outside the rule.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "עולה על 5,000 שקלים חדשים (מינואר 2026 ועד מאי 2026: 10,000 שקלים חדשים) ושאינה כוללת מספר שהקצה לה המנהל",
+      "fetched_at": "2026-08-27T17:41:27.614548+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "vat-s47a2-zero-rate-carveout",
+      "claim": "Section 47(a2)(1) applies only to a tax invoice for a transaction whose tax is not at the zero rate, so zero-rated and exempt-only invoices are outside the allocation requirement.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "הוראות סעיף קטן זה יחולו לעניין חשבונית מס שהוצאה בשל עסקה שהמס שחל לגביה אינו בשיעור אפס",
+      "fetched_at": "2026-08-27T17:41:27.614548+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "vat-section-38-he",
+      "claim": "סעיף 38 לחוק מס ערך מוסף עוסק בניכוי מס תשומות, וסעיף קטן (א1) שולל את הניכוי בחשבונית מעל הסף שאין בה מספר שהקצה המנהל.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "לא יותר ניכוי מס התשומות הכלול בחשבונית מס שסכומה, בלא המס, עולה על 5,000 שקלים חדשים",
+      "fetched_at": "2026-08-27T17:41:48.923317+00:00",
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "vat-section-47-he",
+      "claim": "סעיף 47 לחוק מס ערך מוסף הוא הזכות להוציא חשבונית מס; סעיף קטן (א2)(1) מסדיר את בקשת מספר ההקצאה ומחריג עסקה בשיעור אפס.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "47. זכות להוציא חשבונית מס",
+      "fetched_at": "2026-08-27T17:41:48.923317+00:00",
+      "appears_in": [
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "vat-s47a2-seller-duty",
+      "claim": "The buyer's demand in s.47(a2)(1) governs the SELLER's duty to request an allocation number, not the buyer's entitlement to deduct, so a validator must not treat an absent demand as a pass.",
+      "source_url": "https://he.wikisource.org/wiki/%D7%97%D7%95%D7%A7_%D7%9E%D7%A1_%D7%A2%D7%A8%D7%9A_%D7%9E%D7%95%D7%A1%D7%A3",
+      "raw_snippet": "ובעסקה שסכומה, בלא המס, עולה על הסכום האמור בסעיף 38(א1), חייב הוא לעשות כן לפי דרישת הקונה",
+      "fetched_at": "2026-08-27T18:08:12.879354+00:00",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-directng-host",
+      "claim": "The supported iframe URL is directng.tranzila.com; direct.tranzila.com is Legacy Deprecated",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "https://directng.tranzila.com/terminalname/iframenew.php - Supported integration",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-direct-deprecated",
+      "claim": "direct.tranzila.com iframenew.php is Legacy Deprecated",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "https://direct.tranzila.com/terminalname/iframenew.php -Legacy Deprecated",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-legacy-support-ends",
+      "claim": "The old iframe integration's official support ends on 1 January 2027",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "This integration is deprecated. Official support ends on 1 January 2027",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-post-recommended",
+      "claim": "The vendor recommends POST over GET for iframe parameters",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "However, we strongly recommend using POST for enhanced security",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-tranmode-j",
+      "claim": "tranmode J is a standing order initiation transaction",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "J - Standing order initiation transaction",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "cred-type-6-credit-installments",
+      "claim": "cred_type 6 is credit installments, npay only, minimum 3, customer needs credit authorization",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "For credit transactions, you only need to send the npay parameter with a minimum value of 3",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-wallet-flags",
+      "claim": "google_pay=1 and apple_pay=1 add wallet options to the iframe",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "apple_pay 1 Add the option to pay with Apple Pay",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-recur-params",
+      "claim": "My Billing recurring parameters recur_transaction 4/5/7, recur_start_date, recur_payments, recur_sum",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "recur_transaction 7 Yearly payment",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-business-id-allocation",
+      "claim": "Allocation Number issued automatically when myid matches the registered business ID, otherwise send business_id; none issued if neither is correct",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "business_id does not replace myid; both may be sent, and can hold the same value",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-business-id-no-number",
+      "claim": "If neither myid nor business_id is correct, the transaction completes but no Allocation Number is issued",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "the transaction still completes successfully, but no Allocation Number will be issued for the automatic invoice",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "iframe-response-fields",
+      "claim": "DirectNG response returns transaction_id, index and ccno as last 4 digits",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration-directng",
+      "raw_snippet": "ccno Last 4 digits of credit card number",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "references/api-parameters.md",
+        "scripts/validate_tranzila_response.py"
+      ]
+    },
+    {
+      "claim_id": "handshake-v2",
+      "claim": "Handshake V2 issues a thtk token valid for 20 minutes, requires the Token Module, server-side only",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/handshake-v2",
+      "raw_snippet": "The thtk token is valid for 20 minutes from creation",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "handshake-v2-token-module",
+      "claim": "Handshake requires the Token Module and on iframe must be enabled in terminal settings; afterwards every transaction needs a valid thtk",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/handshake-v2",
+      "raw_snippet": "Once Handshake is activated on an iFrame terminal, all transactions must include a valid thtk",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "handshake-v2-endpoint",
+      "claim": "Handshake V2 base URL is api.tranzila.com/v2; the create call is https://api.tranzila.com/v2/handshake/create with terminal_name and sum",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/handshake-v2",
+      "raw_snippet": "Tranzila Production API V2: https://api.tranzila.com/v2",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "handshake-v1-deprecated",
+      "claim": "/v1/handshake/create is deprecated; amount mismatch gives Illegal Operation 912791",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "https://api.tranzila.com/v1/handshake/create - Deprecated",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ]
+    },
+    {
+      "claim_id": "handshake-912791",
+      "claim": "If the checkout amount differs from the handshake amount, Illegal Operation 912791 is printed and no transaction is made",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/iframe-integration",
+      "raw_snippet": "Illegal Operation 912791",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "hosted-fields-script",
+      "claim": "Hosted Fields JS is at hf.tranzila.com/assets/js/thostedf.js and all Hosted Fields use requires the handshake",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "All use and interaction with Hosted Fields requires the use of a secure 'handshake.'",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "hosted-fields-js-url",
+      "claim": "Hosted Fields JS URL",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "Tranzila's hosted fields JavaScript file is available to use at: https://hf.tranzila.com/assets/js/thostedf.js",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "hosted-fields-response-hash",
+      "claim": "response_hash is a hash of the response JSON minus the response_hash key; requested_by_user selects a personal secret",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "Hashed string contains all the response json but the response_hash key and its value",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/validate_tranzila_response.py"
+      ]
+    },
+    {
+      "claim_id": "hosted-fields-token",
+      "claim": "Hosted Fields returns a card token in transaction_response.token when tokenize is requested",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "transaction_response.token Credit card token if requested in tokenize parameter",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "scripts/validate_tranzila_response.py"
+      ]
+    },
+    {
+      "claim_id": "v2-token-in-card-number",
+      "claim": "On API V2 a token is sent in the card_number field together with the expiry",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-transactions-api-1/create-a-credit-card-transaction",
+      "raw_snippet": "Submit the transaction using the token in the card_number field. Send the card expiry date, and CVV where required, alongside the token.",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; the text ships inside a percent-encoded OpenAPI data: URL, so a plain fetch cannot match it",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "v2-txn-type-sto",
+      "claim": "txn_type verify with verify_mode 6 initializes a standing order; txn_type sto charges with reference_txn_id",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-transactions-api-1/create-a-credit-card-transaction",
+      "raw_snippet": "Initializes a standing order (sto). Use the verification response when submitting the later sto transaction. sto — Performs a standing order charge.",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; the text ships inside a percent-encoded OpenAPI data: URL, so a plain fetch cannot match it",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "sto-v2-endpoints",
+      "claim": "STO create is https://api.tranzila.com/v2/sto/create and update is /v2/sto/update; the V1 create and update endpoints are deprecated and unsupported; /v1/stos/get remains active",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/sto-api-for-my-billing",
+      "raw_snippet": "The V1 create and update endpoints are no longer supported; migrate to their V2 equivalents. Retrieve a list of STOs (/v1/stos/get) remains active",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "masav-api",
+      "claim": "MASAV API is a separate product requiring an institution code and a MASAV module",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/masav-api",
+      "raw_snippet": "Receiving an institution code",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18 (the plain fetch intermittently returns a JS shell)",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "pci-saq-a-r1",
+      "claim": "SAQ A (Jan 2025, in effect 31 March 2025) removed 6.4.3 and 11.6.1 and added the script-attack eligibility criterion",
+      "source_url": "https://blog.pcisecuritystandards.org/important-updates-announced-for-merchants-validating-to-self-assessment-questionnaire-a",
+      "raw_snippet": "Removal of PCI DSS Requirements 6.4.3 and 11.6.1 for payment page security",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "pci-saq-a-effective",
+      "claim": "The January 2025 SAQ A takes effect 31 March 2025",
+      "source_url": "https://blog.pcisecuritystandards.org/important-updates-announced-for-merchants-validating-to-self-assessment-questionnaire-a",
+      "raw_snippet": "it does not take effect until 31 March 2025",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "pci-faq-1588",
+      "claim": "FAQ 1588: criterion applies to embedded (iframe) payment forms, met by 6.4.3/11.6.1-style techniques or TPSP confirmation, not to redirects",
+      "source_url": "https://blog.pcisecuritystandards.org/faq-clarifies-new-saq-a-eligibility-criteria-for-e-commerce-merchants",
+      "raw_snippet": "The merchant has confirmed that their site is not susceptible to attacks from scripts that could affect the merchant's e-commerce system(s)",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/domain-checklist.md"
+      ]
+    },
+    {
+      "claim_id": "tranzilajs-stale-constants",
+      "claim": "tranzilajs constants point checkout at direct.tranzila.com and STO update at /v1/sto/update",
+      "source_url": "https://raw.githubusercontent.com/NirTatcher/tranzilajs/HEAD/src/constants.ts",
+      "raw_snippet": "CHECKOUT: 'https://direct.tranzila.com'",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "tranzilajs-sto-update-v1",
+      "claim": "tranzilajs STO_UPDATE constant",
+      "source_url": "https://raw.githubusercontent.com/NirTatcher/tranzilajs/HEAD/src/constants.ts",
+      "raw_snippet": "\"STO_UPDATE\": \"/v1/sto/update\"",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ]
+    },
+    {
+      "claim_id": "legacy-cgi-location-block",
+      "claim": "The legacy secure5 CGIs still answer, refusing an unregistered caller with 'Transactions are not allowed from this location'; a fabricated sibling CGI returns 404",
+      "source_url": "https://secure5.tranzila.com/cgi-bin/tranzila31tk.cgi",
+      "raw_snippet": "Transactions are not allowed from this location",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-parameters.md"
+      ],
+      "verified_via": "endpoint probe: POST supplier=test to tranzila31tk.cgi and tranzila36a.cgi returned HTTP 200 with this message; POST to a fabricated tranzila99nonexist.cgi on the same host returned 404 (negative control)",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "pr-create-http200-on-401",
+      "claim": "Payment requests are created at https://api.tranzila.com/v1/pr/create and sent by email, SMS or both; a probe without credentials returned HTTP 200 with code 401 in the body",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/payment-request",
+      "raw_snippet": "To initiate a request, make a call to the following endpoint: https://api.tranzila.com/v1/pr/create",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md"
+      ],
+      "verified_via": "docs page fetched for the endpoint; separately, endpoint probe on 2026-10-18: POST with no headers to /v1/pr/create returned HTTP 200 with body {\"code\":401,\"message\":\"Unauthorized\",...}, while POST to /v1/pr/nonexist returned HTTP 404 (negative control)",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "v2-items-authnumber",
+      "claim": "On API V2 credit, reversal and cancel require authorization_number; missing it returns 22101; amounts are carried in items; non-PCI-certified integrations must not send a full card number",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-transactions-api-1/create-a-credit-card-transaction",
+      "raw_snippet": "Authorization (approval) number of the original transaction. REQUIRED when txn_type is `credit`, `reversal` or `cancel`",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; also on the page: '22101 Empty authorization number', 'Full card number integration — permitted only for PCI DSS-certified integrations', and every request example carries the amount in an items array",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "v2-user-defined-business-id",
+      "claim": "On API V2 the business ID for the allocation number goes in user_defined_fields under the name business_id, alongside card_holder_id",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-transactions-api-1/create-a-credit-card-transaction",
+      "raw_snippet": "send the correct business ID separately via user_defined_fields, using the name business_id. business_id does not replace card_holder_id",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "hf-business-id-card-holder-id-number",
+      "claim": "On Hosted Fields the ID is card_holder_id_number and business_id is passed as a non-hosted field; notify_url is the IPN; force_txn_on_3ds_fail defaults to Y",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "If neither card_holder_id_number nor business_id contains the customer's correct registered business ID",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ]
+    },
+    {
+      "claim_id": "hf-notify-url-ipn",
+      "claim": "Hosted Fields notify_url is the server-to-server IPN",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "URL endpoint for receiving transaction data (IPN)",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ]
+    },
+    {
+      "claim_id": "hf-chargebit",
+      "claim": "The Hosted Fields page documents fields.chargeBit for Bit, while the Bit page says Hosted Fields is not supported",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/hosted-fields",
+      "raw_snippet": "invoke the fields.chargeBit method",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ]
+    },
+    {
+      "claim_id": "bit-init-contract",
+      "claim": "Bit Init is `POST /v1/transaction/bit/init` on https://api.tranzila.com (https://api.tranzila.com/v1/transaction/bit/init, /v1/transaction/bit/init); it requires success_url, failure_url, notify_url and items; the response sale_url is shown in an iframe",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/bit-api/bit-init",
+      "raw_snippet": "The amount of the transaction is calculated from the items details. There must be at least one item.",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; the page also says 'The response contains a URL that needs to be displayed in an Iframe'",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "3ds-activate",
+      "claim": "On the API, 3DS is requested with activate_3ds Y and a 3ds_settings object with browser data; the challengeUrl is opened in the browser and the result returns to auth_3ds_redirect ; then POST /v1/transaction/credit_card/3ds/complete is called",
+      "source_url": "https://docs.tranzila.com/docs/payments-and-billing/tranzila-api-3ds/create",
+      "raw_snippet": "Open a browser. The URL would be challengeUrl value from step1.",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/3ds-flow.md",
+        "references/api-v2-flows.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; request body lists activate_3ds (Y/N) and 3ds_settings with a browser object",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "reports-api",
+      "claim": "Transactions can be retrieved server-side from https://api.tranzila.com/v1/transactions (no product lines) or https://report.tranzila.com/v1/transaction (with product lines, ufields/dfields filters)",
+      "source_url": "https://docs.tranzila.com/docs/reports/tranzila-transaction-reports-api",
+      "raw_snippet": "Transactions without product line items",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md",
+        "references/domain-checklist.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; the same table lists https://api.tranzila.com/v1/transactions and https://report.tranzila.com/v1/transaction",
+      "verified_at": "2026-10-18"
+    },
+    {
+      "claim_id": "invoices-api-base",
+      "claim": "The Invoices API is served from https://billing5.tranzila.com and integrates with transactions via transaction indexing",
+      "source_url": "https://docs.tranzila.com/docs/invoices/invoices-api",
+      "raw_snippet": "Integration with Tranzila payment system via transaction indexing",
+      "fetched_at": "2026-10-18T12:00:00Z",
+      "appears_in": [
+        "SKILL.md",
+        "SKILL_HE.md",
+        "references/api-v2-flows.md"
+      ],
+      "verified_via": "browser: rendered in headless Chromium with location.href asserted on 2026-10-18; server URL on the page is https://billing5.tranzila.com",
+      "verified_at": "2026-10-18"
+    }
+  ]
+}
