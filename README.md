@@ -26,6 +26,7 @@ When several skills overlap, `CLAUDE.md` tells Claude which one to prefer.
 | Analytics & errors | posthog-instrument-integration, posthog-instrument-product-analytics, posthog-instrument-error-tracking | PostHog/ai-plugin |
 | Deploy & operate | deploy-to-vercel, vercel-cli-with-tokens, vercel-optimize | vercel-labs/agent-skills |
 | Session handoff | handoff, finishing-a-development-branch | mattpocock/skills, obra/superpowers |
+| Decisions | llm-council (5 advisors, anonymous peer review, chairman verdict) | Karpathy's LLM Council, adapted |
 | Other | hyperframes (HTML→video), setup-matt-pocock-skills | heygen-com/hyperframes, mattpocock/skills |
 
 Renamed on import to avoid clashes: getsentry's `security-review` → `owasp-security-review` (Claude Code has a built-in `/security-review`), PostHog's `instrument-*` → `posthog-instrument-*`.
