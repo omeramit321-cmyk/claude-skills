@@ -8,7 +8,7 @@ When several skills overlap, `CLAUDE.md` tells Claude which one to prefer.
 
 | Stage | Skills | Source |
 |---|---|---|
-| Understand what to build | brainstorming, grill-me, grilling, to-spec | obra/superpowers, mattpocock/skills |
+| Understand what to build | brainstorming, grilling (`/grill-me` is a shortcut to it), to-spec | obra/superpowers, mattpocock/skills |
 | Plan | writing-plans, executing-plans, subagent-driven-development, using-git-worktrees | obra/superpowers |
 | Design direction | ui-ux-pro-max, design-system, brand, design, banner-design, slides | nextlevelbuilder/ui-ux-pro-max-skill |
 | UI polish | emil-design-eng, web-design-guidelines | emilkowalski/skills, vercel-labs/agent-skills |
@@ -18,7 +18,7 @@ When several skills overlap, `CLAUDE.md` tells Claude which one to prefer.
 | Payments (Israel) | grow-payment-gateway, cardcom-payment-gateway, tranzila-payment-gateway, israeli-payment-orchestrator | skills-il/tax-and-finance |
 | Payments (global) | stripe-best-practices | stripe/ai |
 | Email, SMS, WhatsApp | resend, react-email, email-best-practices, israeli-sms-gateway, israeli-whatsapp-business, israeli-phone-formatter | resend/resend-skills, skills-il |
-| Code quality | tdd, test-driven-development, code-review, requesting-code-review, systematic-debugging, find-bugs, verification-before-completion, codebase-design, domain-modeling, improve-codebase-architecture | mattpocock/skills, obra/superpowers, getsentry/skills |
+| Code quality | test-driven-development, code-review, requesting-code-review, systematic-debugging, find-bugs, verification-before-completion, codebase-design, domain-modeling, improve-codebase-architecture | mattpocock/skills, obra/superpowers, getsentry/skills |
 | End-to-end tests | webapp-testing, playwright-cli | anthropics/skills, microsoft/playwright-cli |
 | Performance, SEO, accessibility | web-quality-audit, performance, core-web-vitals, seo, accessibility, best-practices | addyosmani/web-quality-skills |
 | Security | owasp-security-review, israeli-appsec-scanner | getsentry/skills, skills-il/security-compliance |
