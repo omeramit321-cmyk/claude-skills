@@ -18,6 +18,7 @@ Skip stages that don't apply (a static one-page site needs no backend or payment
 
 This repository holds many skills, and some overlap. When more than one could apply, prefer:
 
+- **Stress-testing a decision:** `llm-council` when the user faces a real decision with options and stakes and wants several perspectives (it runs 11 sub-agents, so not for small questions); `grill-me` when they want their own plan interrogated question by question.
 - **Tests:** `tdd` for the test-first loop; `test-driven-development` only when following the superpowers workflow (`writing-plans` → `executing-plans`).
 - **UI components:** `shadcn` in any project with a `components.json`; `ui-styling` for Tailwind without shadcn, and for posters/canvas compositions.
 - **Design direction:** `ui-ux-pro-max` for style, palette and font choices; `emil-design-eng` for motion and polish; `web-design-guidelines` for reviewing finished UI.
