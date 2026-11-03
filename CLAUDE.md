@@ -18,6 +18,7 @@ Skip stages that don't apply (a static one-page site needs no backend or payment
 
 This repository holds many skills, and some overlap. When more than one could apply, prefer:
 
+- **Same skill in two places:** the user keeps these skills both in their claude.ai account (listed as `anthropic-skills:<name>`) and here, on purpose. When a skill shows up from both, use this repo's copy: for several, especially the design skills, the repo has the full original with its scripts and data, and the account copy is a shorter version.
 - **Stress-testing a decision:** `llm-council` when the user faces a real decision with options and stakes and wants several perspectives (it runs 11 sub-agents, so not for small questions); `grilling` when they want their own plan interrogated question by question (`/grill-me` is the user's shortcut to it).
 - **UI components:** `shadcn` in any project with a `components.json`; `ui-styling` for Tailwind without shadcn, and for posters/canvas compositions.
 - **Design direction:** `ui-ux-pro-max` for style, palette and font choices; `emil-design-eng` for motion and polish; `web-design-guidelines` for reviewing finished UI.
